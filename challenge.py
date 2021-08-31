@@ -1,5 +1,6 @@
 import itertools
 import math
+import time
 
 def sum_calories(items):
     return sum(item['calories'] for item in items)
@@ -72,10 +73,16 @@ def main():
         {'name': 'Bottled Water', 'calories': 0, 'cost': 1},
         {'name': 'Soda', 'calories': 100, 'cost': 1}
     ]
-    solution = optimize_food(1000, 200, 10, menu, [])
+
+    start = time.time()
+    solution = optimize_food(2000, 1200, 18, menu, [])
     print_solution(solution)
-    solution = optimize_food_iterative(1000, 200, 10, menu)
+    print(f'Time elapsed: {time.time() - start}')
+
+    start = time.time()
+    solution = optimize_food_iterative(2000, 1200, 18, menu)
     print_solution_iterative(solution, menu)
+    print(f'Time elapsed: {time.time() - start}')
 
 if __name__ == '__main__':
     main()
