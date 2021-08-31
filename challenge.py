@@ -4,18 +4,25 @@ def sum_calories(items):
 def sum_cost(items):
     return sum(item['cost'] for item in items)
 
-def optimize_food(calorie_max, budget, menu, current_list):
+def optimize_food(calorie_max, calorie_min, budget, menu, current_list):
     total_calories = sum_calories(current_list)
     total_cost = sum_cost(current_list)
     solutions = []
 
     for item in menu:
         if total_calories + item['calories'] < calorie_max and total_cost + item['cost'] < budget:
-            solutions.append(optimize_food(calorie_max, budget, menu, current_list + [item]))
+            solutions.append(optimize_food(calorie_max, calorie_min, budget, menu, current_list + [item]))
         else:
             solutions.append(current_list)
 
+    solutions = [s for s in solutions if sum_calories(s) > calorie_min]
     return max(solutions, key=lambda x: (sum_cost(x), sum_calories(x)), default=[])
+
+def print_solution(solution):
+    print('You should purchase the following items:')
+    print(', '.join([item['name'] for item in solution]))
+    print(f'Total cost: ${sum_cost(solution)}')
+    print(f'Total calories: {sum_calories(solution)}')
 
 def main():
     menu = [
@@ -26,7 +33,8 @@ def main():
         {'name': 'Bottled Water', 'calories': 0, 'cost': 1},
         {'name': 'Soda', 'calories': 100, 'cost': 1}
     ]
-    print(optimize_food(1000, 10, menu, []))
+    solution = optimize_food(1000, 200, 10, menu, [])
+    print_solution(solution)
 
 if __name__ == '__main__':
     main()
